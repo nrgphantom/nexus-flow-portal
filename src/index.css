@@ -91,6 +91,22 @@
     @apply border-purple-500/50 shadow-2xl;
     box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.25);
   }
+
+  /* Custom scrollbar - hidden but functional */
+  .custom-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
+
+  /* Allow scrolling on mobile */
+  .custom-scrollbar {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }
 
 @layer utilities {
@@ -138,29 +154,20 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Custom scrollbar for dark theme */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Global scrollbar hiding */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-::-webkit-scrollbar-track {
-  background: rgb(0, 0, 0);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgb(75, 85, 99);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(147, 51, 234);
+*::-webkit-scrollbar {
+  display: none; /* WebKit */
 }
 
 /* Iframe responsive styling */
 iframe {
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* Enterprise level styling */
@@ -170,4 +177,11 @@ iframe {
 
 .enterprise-shadow {
   box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.25);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .custom-scrollbar {
+    -webkit-overflow-scrolling: touch;
+  }
 }
