@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,7 @@ const Index = () => {
     {
       id: "alpha",
       name: "Alpha Mind",
-      url: "https://thealpahmind.vercel.app",
+      url: "https://thealphamind.vercel.app",
       icon: Brain,
       description: "AI-powered intelligent analysis platform for data-driven insights",
       category: "Analytics"
