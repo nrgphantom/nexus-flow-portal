@@ -1,15 +1,17 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sword, Brain, Zap, ArrowLeft, Shield, Lock } from "lucide-react";
+import { Sword, Brain, Zap, ArrowLeft, Shield, Lock, Loader } from "lucide-react";
 
 const Index = () => {
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessKey, setAccessKey] = useState("");
   const [authError, setAuthError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingToolId, setLoadingToolId] = useState<string | null>(null);
 
   const validAccessKeys = ["admin@gudman123", "0xGudman123"];
 
@@ -40,11 +42,21 @@ const Index = () => {
     }
   ];
 
+  // Check for saved access key on component mount
+  useEffect(() => {
+    const savedAccessKey = localStorage.getItem("chainknight-access-key");
+    if (savedAccessKey && validAccessKeys.includes(savedAccessKey)) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const handleAccessKeySubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validAccessKeys.includes(accessKey)) {
       setIsAuthenticated(true);
       setAuthError("");
+      // Save access key to localStorage
+      localStorage.setItem("chainknight-access-key", accessKey);
     } else {
       setAuthError("Invalid access key. Please try again.");
       setAccessKey("");
@@ -52,7 +64,15 @@ const Index = () => {
   };
 
   const openTool = (toolId: string) => {
-    setActiveToolId(toolId);
+    setLoadingToolId(toolId);
+    setIsLoading(true);
+    
+    // Simulate loading time for better UX
+    setTimeout(() => {
+      setActiveToolId(toolId);
+      setIsLoading(false);
+      setLoadingToolId(null);
+    }, 1500);
   };
 
   const closeTool = () => {
@@ -60,6 +80,7 @@ const Index = () => {
   };
 
   const activeTool = tools.find(tool => tool.id === activeToolId);
+  const loadingTool = tools.find(tool => tool.id === loadingToolId);
 
   // Authentication screen
   if (!isAuthenticated) {
@@ -109,6 +130,49 @@ const Index = () => {
     );
   }
 
+  // Loading screen when opening a tool
+  if (isLoading && loadingTool) {
+    return (
+      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+        <div className="text-center">
+          {/* Animated loader */}
+          <div className="relative mb-8">
+            <div className="w-32 h-32 border-4 border-purple-600/20 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-32 h-32 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-4 w-24 h-24 border-4 border-transparent border-t-purple-400 rounded-full animate-spin" style={{ animationDirection: 'reverse' }}></div>
+            <div className="absolute inset-8 w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full flex items-center justify-center">
+              <loadingTool.icon className="w-8 h-8 text-white animate-pulse" />
+            </div>
+          </div>
+
+          {/* Loading text with typing animation */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold text-white animate-pulse">
+              Initializing {loadingTool.name}
+            </h2>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+            <p className="text-gray-400 animate-pulse">
+              Loading enterprise protocols...
+            </p>
+          </div>
+
+          {/* Progress bar effect */}
+          <div className="mt-8 w-64 mx-auto">
+            <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // If a tool is active, show fullscreen overlay
   if (activeTool) {
     return (
@@ -142,7 +206,8 @@ const Index = () => {
         <div className="h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] overflow-hidden">
           <iframe
             src={activeTool.url}
-            className="w-full h-full border-0"
+            className="w-full h-full border-0 opacity-0 animate-fade-in"
+            style={{ animation: 'fadeIn 0.5s ease-out 0.2s forwards' }}
             title={activeTool.name}
             sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
           />
@@ -195,11 +260,13 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {tools.map((tool) => {
             const Icon = tool.icon;
+            const isCurrentlyLoading = loadingToolId === tool.id;
+            
             return (
               <Card 
                 key={tool.id}
-                className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 cursor-pointer group relative overflow-hidden"
-                onClick={() => openTool(tool.id)}
+                className={`bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 cursor-pointer group relative overflow-hidden ${isCurrentlyLoading ? 'opacity-75 pointer-events-none' : ''}`}
+                onClick={() => !isCurrentlyLoading && openTool(tool.id)}
               >
                 {/* Gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -215,7 +282,11 @@ const Index = () => {
                   {/* Icon and Title */}
                   <div className="flex items-center space-x-4 mb-4">
                     <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl flex items-center justify-center shadow-lg group-hover:from-purple-500 group-hover:to-purple-700 transition-all duration-300 group-hover:scale-110">
-                      <Icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                      {isCurrentlyLoading ? (
+                        <Loader className="w-6 h-6 md:w-8 md:h-8 text-white animate-spin" />
+                      ) : (
+                        <Icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                      )}
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300">
@@ -232,13 +303,16 @@ const Index = () => {
                   {/* Action Button */}
                   <div className="flex justify-center">
                     <Button
-                      className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white border-0 font-bold px-6 py-3 transition-all duration-300 rounded-xl shadow-lg group-hover:shadow-xl transform group-hover:scale-105"
+                      className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white border-0 font-bold px-6 py-3 transition-all duration-300 rounded-xl shadow-lg group-hover:shadow-xl transform group-hover:scale-105 disabled:opacity-50"
                       onClick={(e) => {
                         e.stopPropagation();
-                        openTool(tool.id);
+                        if (!isCurrentlyLoading) {
+                          openTool(tool.id);
+                        }
                       }}
+                      disabled={isCurrentlyLoading}
                     >
-                      OPEN
+                      {isCurrentlyLoading ? 'LOADING...' : 'OPEN'}
                     </Button>
                   </div>
                 </div>
