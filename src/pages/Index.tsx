@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sword, Brain, Zap, ArrowLeft, Shield, Lock, Loader } from "lucide-react";
+import { Sword, Brain, Zap, ArrowLeft, Shield, Lock, Loader, LockOpen } from "lucide-react";
 
 const Index = () => {
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
@@ -11,6 +12,8 @@ const Index = () => {
   const [authError, setAuthError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadingToolId, setLoadingToolId] = useState<string | null>(null);
+  const [isToolLoaded, setIsToolLoaded] = useState(false);
+  const [accessProtectionEnabled, setAccessProtectionEnabled] = useState(true);
 
   const validAccessKeys = ["admin@gudman123", "0xGudman123"];
 
@@ -44,9 +47,15 @@ const Index = () => {
     }
   ];
 
-  // Check for saved access key on component mount
+  // Check for saved access key and protection setting on component mount
   useEffect(() => {
     const savedAccessKey = localStorage.getItem("chainknight-access-key");
+    const savedProtectionSetting = localStorage.getItem("chainknight-protection-enabled");
+    
+    if (savedProtectionSetting !== null) {
+      setAccessProtectionEnabled(savedProtectionSetting === "true");
+    }
+    
     if (savedAccessKey && validAccessKeys.includes(savedAccessKey)) {
       setIsAuthenticated(true);
     }
@@ -64,39 +73,69 @@ const Index = () => {
     }
   };
 
+  const toggleAccessProtection = () => {
+    const newState = !accessProtectionEnabled;
+    setAccessProtectionEnabled(newState);
+    localStorage.setItem("chainknight-protection-enabled", newState.toString());
+    
+    if (!newState) {
+      setIsAuthenticated(true);
+    } else {
+      const savedAccessKey = localStorage.getItem("chainknight-access-key");
+      if (!savedAccessKey || !validAccessKeys.includes(savedAccessKey)) {
+        setIsAuthenticated(false);
+      }
+    }
+  };
+
   const openTool = (toolId: string) => {
     setLoadingToolId(toolId);
     setIsLoading(true);
-    
-    setTimeout(() => {
-      setActiveToolId(toolId);
-      setIsLoading(false);
-      setLoadingToolId(null);
-    }, 1500);
+    setIsToolLoaded(false);
   };
 
   const closeTool = () => {
     setActiveToolId(null);
+    setIsLoading(false);
+    setIsToolLoaded(false);
+    setLoadingToolId(null);
+  };
+
+  const handleIframeLoad = () => {
+    setIsToolLoaded(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setActiveToolId(loadingToolId);
+      setLoadingToolId(null);
+    }, 500);
   };
 
   const activeTool = tools.find(tool => tool.id === activeToolId);
   const loadingTool = tools.find(tool => tool.id === loadingToolId);
 
   // Authentication screen with chrome effects
-  if (!isAuthenticated) {
+  if (accessProtectionEnabled && !isAuthenticated) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Lock toggle button */}
+        <Button
+          onClick={toggleAccessProtection}
+          className="absolute top-6 right-6 z-50 bg-gray-800/80 hover:bg-gray-700/80 backdrop-blur-sm border border-gray-600/50 rounded-xl p-3"
+          size="sm"
+        >
+          <Lock className="w-5 h-5" />
+        </Button>
+
         {/* Animated background particles */}
         <div className="absolute inset-0 opacity-20">
           {[...Array(50)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-purple-400 rounded-full animate-pulse"
+              className="absolute w-1 h-1 bg-purple-400 rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 3}s`
+                animation: `float ${2 + Math.random() * 3}s ease-in-out ${Math.random() * 3}s infinite`
               }}
             />
           ))}
@@ -165,32 +204,42 @@ const Index = () => {
     );
   }
 
-  // Enhanced loading screen with motion graphics
+  // Enhanced loading screen with motion graphics (no blinking effects)
   if (isLoading && loadingTool) {
     return (
       <div className="fixed inset-0 bg-black z-50 flex items-center justify-center relative overflow-hidden">
+        {/* Hidden iframe for preloading */}
+        {!isToolLoaded && (
+          <iframe
+            src={loadingTool.url}
+            className="hidden"
+            onLoad={handleIframeLoad}
+            title={`Loading ${loadingTool.name}`}
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
+          />
+        )}
+
         {/* Animated background grid */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-cyan-900/30"></div>
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="absolute border border-purple-500/20 rounded-full animate-ping"
+              className="absolute border border-purple-500/20 rounded-full"
               style={{
                 width: `${50 + i * 20}px`,
                 height: `${50 + i * 20}px`,
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
-                animationDelay: `${i * 0.2}s`,
-                animationDuration: '3s'
+                animation: `float ${3 + i * 0.2}s ease-in-out ${i * 0.2}s infinite`
               }}
             />
           ))}
         </div>
 
         <div className="text-center relative z-10">
-          {/* Chrome loading spinner */}
+          {/* Chrome loading spinner (no blinking) */}
           <div className="relative mb-12 group">
             <div className="w-40 h-40 border-8 border-purple-600/20 rounded-full relative">
               <div className="absolute inset-0 border-8 border-transparent border-t-purple-500 rounded-full animate-spin"></div>
@@ -200,16 +249,16 @@ const Index = () => {
               {/* Center chrome icon */}
               <div className="absolute inset-12 bg-gradient-to-br from-purple-600 via-purple-800 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl">
                 <div className="absolute inset-1 bg-black rounded-full"></div>
-                <loadingTool.icon className="w-12 h-12 text-white animate-pulse relative z-10" />
+                <loadingTool.icon className="w-12 h-12 text-white relative z-10" />
                 {/* Chrome reflection */}
                 <div className="absolute inset-1 bg-gradient-to-tr from-white/30 via-white/10 to-transparent rounded-full pointer-events-none"></div>
               </div>
             </div>
           </div>
 
-          {/* Enhanced loading text */}
+          {/* Enhanced loading text (no blinking) */}
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-white animate-pulse bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold text-white bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
               Initializing {loadingTool.name}
             </h2>
             
@@ -224,15 +273,15 @@ const Index = () => {
               ))}
             </div>
             
-            <p className="text-gray-300 animate-pulse text-lg">
-              Loading enterprise protocols...
+            <p className="text-gray-300 text-lg">
+              {isToolLoaded ? "Loading complete, finalizing..." : "Loading enterprise protocols..."}
             </p>
           </div>
 
           {/* Chrome progress bar */}
           <div className="mt-12 w-80 mx-auto">
             <div className="h-2 bg-gray-800 rounded-full overflow-hidden relative">
-              <div className="h-full bg-gradient-to-r from-purple-600 via-purple-400 to-cyan-400 rounded-full animate-pulse shadow-lg"></div>
+              <div className={`h-full bg-gradient-to-r from-purple-600 via-purple-400 to-cyan-400 rounded-full shadow-lg transition-all duration-1000 ${isToolLoaded ? 'w-full' : 'w-3/4'}`}></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 transform -translate-x-full animate-shimmer"></div>
             </div>
           </div>
@@ -299,12 +348,11 @@ const Index = () => {
         {[...Array(30)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-px h-px bg-purple-400/30 rounded-full animate-pulse"
+            className="absolute w-px h-px bg-purple-400/30 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`
+              animation: `float ${3 + Math.random() * 4}s ease-in-out ${Math.random() * 5}s infinite`
             }}
           />
         ))}
@@ -336,9 +384,20 @@ const Index = () => {
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Lock toggle button */}
+              <Button
+                onClick={toggleAccessProtection}
+                className={`bg-gray-800/80 hover:bg-gray-700/80 backdrop-blur-sm border border-gray-600/50 rounded-xl p-3 transition-all duration-300 ${
+                  accessProtectionEnabled ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300'
+                }`}
+                size="sm"
+              >
+                {accessProtectionEnabled ? <Lock className="w-5 h-5" /> : <LockOpen className="w-5 h-5" />}
+              </Button>
+              
               <div className="text-sm text-gray-400 flex items-center space-x-2">
                 <span>{tools.length} Tools</span>
-                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse shadow-lg"></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full shadow-lg" style={{ animation: 'float 2s ease-in-out infinite' }}></div>
               </div>
             </div>
           </div>
@@ -373,7 +432,7 @@ const Index = () => {
                 <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-10 transition-all duration-700`}></div>
                 
                 {/* Animated border */}
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-600 via-cyan-600 to-purple-600 opacity-0 group-hover:opacity-30 blur-sm transition-all duration-700 animate-pulse"></div>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-600 via-cyan-600 to-purple-600 opacity-0 group-hover:opacity-30 blur-sm transition-all duration-700" style={{ animation: 'float 4s ease-in-out infinite' }}></div>
                 
                 <div className="p-8 relative z-10">
                   {/* Category badge with chrome effect */}
@@ -448,9 +507,9 @@ const Index = () => {
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-500">
               <span className="hover:text-purple-400 transition-colors cursor-pointer">Wayne Protocol</span>
-              <div className="w-1 h-1 bg-purple-500 rounded-full animate-pulse"></div>
+              <div className="w-1 h-1 bg-purple-500 rounded-full" style={{ animation: 'float 2s ease-in-out infinite' }}></div>
               <span className="hover:text-cyan-400 transition-colors cursor-pointer">Alpha Mind</span>
-              <div className="w-1 h-1 bg-cyan-500 rounded-full animate-pulse"></div>
+              <div className="w-1 h-1 bg-cyan-500 rounded-full" style={{ animation: 'float 2.5s ease-in-out infinite' }}></div>
               <span className="hover:text-emerald-400 transition-colors cursor-pointer">Euler Flow</span>
             </div>
           </div>
