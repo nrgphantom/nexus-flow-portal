@@ -337,11 +337,10 @@ const Index = () => {
               return (
                 <Card 
                   key={tool.id}
-                  className="w-80 h-80 bg-gray-900 border-2 border-gray-800 hover:border-blue-600 hover:border-purple-600 transition-all duration-500 transform hover:scale-105 cursor-pointer group mx-auto"
+                  className={`w-80 h-80 bg-gray-900 border-2 border-gray-800 transition-all duration-500 transform hover:scale-105 cursor-pointer group mx-auto ${
+                    index === 0 ? 'hover:border-blue-600' : 'hover:border-purple-600'
+                  }`}
                   onClick={() => openTool(tool.id)}
-                  style={{
-                    borderColor: index === 0 ? 'rgb(37 99 235)' : 'rgb(147 51 234)'
-                  }}
                 >
                   <div className="h-full flex flex-col items-center justify-center p-8">
                     <div className="w-24 h-24 relative mb-8">
