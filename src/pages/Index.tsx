@@ -311,16 +311,9 @@ const Index = () => {
             
             <div className="flex items-center space-x-4">
               {/* Lock toggle button */}
-              <Button onClick={toggleAccessProtection} className={`bg-gray-800/80 hover:bg-gray-700/80 backdrop-blur-sm border border-gray-600/50 rounded-xl p-3 transition-all duration-300 ${accessProtectionEnabled ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300'}`} size="sm">
-                {accessProtectionEnabled ? <Lock className="w-5 h-5" /> : <LockOpen className="w-5 h-5" />}
-              </Button>
               
-              <div className="text-sm text-gray-400 flex items-center space-x-2">
-                <span>{tools.length} Tools</span>
-                <div className="w-2 h-2 bg-purple-500 rounded-full shadow-lg" style={{
-                animation: 'float 2s ease-in-out infinite'
-              }}></div>
-              </div>
+              
+              
             </div>
           </div>
         </div>
