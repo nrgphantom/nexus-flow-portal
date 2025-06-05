@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,43 +14,53 @@ const Index = () => {
   const [loadingToolId, setLoadingToolId] = useState<string | null>(null);
   const [isToolLoaded, setIsToolLoaded] = useState(false);
   const [accessProtectionEnabled, setAccessProtectionEnabled] = useState(true);
-  
+
   const validAccessKeys = ["admin@gudman123", "0xGudman123"];
-  
-  const tools = [{
-    id: "wayne",
-    name: "Wayne Protocol",
-    url: "https://wayneprotocol.vercel.app",
-    icon: Sword,
-    category: "Protocol",
-    gradient: "from-red-600 via-red-700 to-red-900"
-  }, {
-    id: "alpha",
-    name: "Alpha Mind",
-    url: "https://thealphamind.vercel.app",
-    icon: Brain,
-    category: "Analytics",
-    gradient: "from-blue-600 via-blue-700 to-blue-900"
-  }, {
-    id: "euler",
-    name: "Euler Flow",
-    url: "https://eulerflow.vercel.app",
-    icon: Zap,
-    category: "Optimization",
-    gradient: "from-purple-600 via-purple-700 to-purple-900"
-  }];
+
+  const tools = [
+    {
+      id: "wayne",
+      name: "Wayne Protocol",
+      url: "https://wayneprotocol.vercel.app",
+      icon: Sword,
+      description: "Advanced protocol management system for enterprise blockchain operations",
+      category: "Protocol Management",
+      gradient: "from-purple-600 via-purple-700 to-indigo-800"
+    },
+    {
+      id: "alpha",
+      name: "Alpha Mind",
+      url: "https://thealphamind.vercel.app",
+      icon: Brain,
+      description: "AI-powered intelligent analysis platform for data-driven insights",
+      category: "Analytics",
+      gradient: "from-cyan-600 via-blue-700 to-purple-800"
+    },
+    {
+      id: "euler",
+      name: "Euler Flow",
+      url: "https://eulerflow.vercel.app",
+      icon: Zap,
+      description: "Mathematical flow optimization for complex computational workflows",
+      category: "Optimization",
+      gradient: "from-emerald-600 via-teal-700 to-cyan-800"
+    }
+  ];
 
   // Check for saved access key and protection setting on component mount
   useEffect(() => {
     const savedAccessKey = localStorage.getItem("chainknight-access-key");
     const savedProtectionSetting = localStorage.getItem("chainknight-protection-enabled");
+    
     if (savedProtectionSetting !== null) {
       setAccessProtectionEnabled(savedProtectionSetting === "true");
     }
+    
     if (savedAccessKey && validAccessKeys.includes(savedAccessKey)) {
       setIsAuthenticated(true);
     }
   }, []);
+
   const handleAccessKeySubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validAccessKeys.includes(accessKey)) {
@@ -61,10 +72,12 @@ const Index = () => {
       setAccessKey("");
     }
   };
+
   const toggleAccessProtection = () => {
     const newState = !accessProtectionEnabled;
     setAccessProtectionEnabled(newState);
     localStorage.setItem("chainknight-protection-enabled", newState.toString());
+    
     if (!newState) {
       setIsAuthenticated(true);
     } else {
@@ -74,17 +87,20 @@ const Index = () => {
       }
     }
   };
+
   const openTool = (toolId: string) => {
     setLoadingToolId(toolId);
     setIsLoading(true);
     setIsToolLoaded(false);
   };
+
   const closeTool = () => {
     setActiveToolId(null);
     setIsLoading(false);
     setIsToolLoaded(false);
     setLoadingToolId(null);
   };
+
   const handleIframeLoad = () => {
     setIsToolLoaded(true);
     setTimeout(() => {
@@ -93,67 +109,93 @@ const Index = () => {
       setLoadingToolId(null);
     }, 500);
   };
+
   const activeTool = tools.find(tool => tool.id === activeToolId);
   const loadingTool = tools.find(tool => tool.id === loadingToolId);
 
-  // Authentication screen - pure black theme
+  // Authentication screen with chrome effects
   if (accessProtectionEnabled && !isAuthenticated) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden">
-        <Button 
-          onClick={toggleAccessProtection} 
-          className="absolute top-6 right-6 z-50 bg-gray-900/80 hover:bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3" 
+        {/* Lock toggle button */}
+        <Button
+          onClick={toggleAccessProtection}
+          className="absolute top-6 right-6 z-50 bg-gray-800/80 hover:bg-gray-700/80 backdrop-blur-sm border border-gray-600/50 rounded-xl p-3"
           size="sm"
         >
           <Lock className="w-5 h-5" />
         </Button>
 
+        {/* Animated background particles */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-purple-400 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animation: `float ${2 + Math.random() * 3}s ease-in-out ${Math.random() * 3}s infinite`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Chrome glass morphism background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-cyan-900/20 backdrop-blur-sm"></div>
+        
         <div className="w-full max-w-md relative z-10">
           <div className="text-center mb-8">
+            {/* Chrome effect logo */}
             <div className="w-24 h-24 mx-auto mb-6 relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-3xl shadow-2xl transform group-hover:scale-110 transition-all duration-500"></div>
-              <div className="absolute inset-1 bg-black rounded-2xl"></div>
-              <div className="absolute inset-2 bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl flex items-center justify-center shadow-inner">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-800 to-indigo-900 rounded-3xl shadow-2xl transform group-hover:scale-110 transition-all duration-500"></div>
+              <div className="absolute inset-1 bg-gradient-to-br from-gray-900 via-black to-gray-800 rounded-2xl"></div>
+              <div className="absolute inset-2 bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl flex items-center justify-center shadow-inner">
                 <Shield className="w-12 h-12 text-white drop-shadow-lg" />
               </div>
-              <div className="absolute inset-2 bg-gradient-to-tr from-white/20 via-white/5 to-transparent rounded-xl pointer-events-none"></div>
+              {/* Chrome reflection */}
+              <div className="absolute inset-2 bg-gradient-to-tr from-white/30 via-white/10 to-transparent rounded-xl pointer-events-none"></div>
             </div>
             
-            <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">
+            <h1 className="text-4xl font-bold text-white mb-3 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
               ChainKnight Access
             </h1>
-            <p className="text-gray-400 text-lg font-medium">
+            <p className="text-gray-300 text-lg font-medium">
               Enter your access key to continue
             </p>
           </div>
 
-          <div className="backdrop-blur-xl bg-gray-900/20 border border-gray-800/50 rounded-2xl p-8 shadow-2xl">
+          {/* Chrome glass form */}
+          <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 shadow-2xl">
             <form onSubmit={handleAccessKeySubmit} className="space-y-6">
               <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-xl blur opacity-25 group-hover:opacity-40 transition-opacity"></div>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 z-10" />
-                  <Input 
-                    type="password" 
-                    placeholder="Enter access key" 
-                    value={accessKey} 
-                    onChange={e => setAccessKey(e.target.value)} 
-                    className="pl-12 bg-black/60 border-gray-700 text-white placeholder-gray-500 h-14 rounded-xl focus:border-gray-600 focus:ring-gray-600 backdrop-blur-sm" 
-                    required 
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+                  <Input
+                    type="password"
+                    placeholder="Enter access key"
+                    value={accessKey}
+                    onChange={(e) => setAccessKey(e.target.value)}
+                    className="pl-12 bg-black/40 border-gray-600 text-white placeholder-gray-400 h-14 rounded-xl focus:border-purple-500 focus:ring-purple-500 backdrop-blur-sm"
+                    required
                   />
                 </div>
               </div>
               
               {authError && (
-                <div className="text-red-400 text-sm text-center bg-red-900/20 border border-red-800/50 rounded-xl p-4 backdrop-blur-sm">
+                <div className="text-red-400 text-sm text-center bg-red-500/10 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm animate-shake">
                   {authError}
                 </div>
               )}
 
-              <Button 
-                type="submit" 
-                className="w-full h-14 rounded-xl font-bold text-lg bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 shadow-2xl transition-all duration-300"
+              <Button
+                type="submit"
+                className="w-full h-14 rounded-xl font-bold text-lg relative overflow-hidden group transition-all duration-300 shadow-2xl"
               >
-                Access Dashboard
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-purple-700 to-cyan-600 transition-all duration-300 group-hover:scale-110"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <span className="relative z-10">Access Dashboard</span>
               </Button>
             </form>
           </div>
@@ -162,232 +204,314 @@ const Index = () => {
     );
   }
 
-  // Centered loading screen - pure black theme
+  // Enhanced loading screen with motion graphics (no blinking effects)
   if (isLoading && loadingTool) {
     return (
-      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center relative overflow-hidden">
+        {/* Hidden iframe for preloading */}
         {!isToolLoaded && (
-          <iframe 
-            src={loadingTool.url} 
-            className="hidden" 
-            onLoad={handleIframeLoad} 
-            title={`Loading ${loadingTool.name}`} 
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation" 
+          <iframe
+            src={loadingTool.url}
+            className="hidden"
+            onLoad={handleIframeLoad}
+            title={`Loading ${loadingTool.name}`}
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
           />
         )}
 
-        <div className="text-center">
-          <div className="relative mb-12">
-            <div className="w-32 h-32 border-4 border-gray-800 rounded-full relative">
-              <div className="absolute inset-0 border-4 border-transparent border-t-white rounded-full animate-spin"></div>
-              <div className="absolute inset-2 border-4 border-transparent border-t-gray-400 rounded-full animate-spin" style={{
-                animationDirection: 'reverse',
-                animationDuration: '2s'
-              }}></div>
+        {/* Animated background grid */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-cyan-900/30"></div>
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute border border-purple-500/20 rounded-full"
+              style={{
+                width: `${50 + i * 20}px`,
+                height: `${50 + i * 20}px`,
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                animation: `float ${3 + i * 0.2}s ease-in-out ${i * 0.2}s infinite`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="text-center relative z-10">
+          {/* Chrome loading spinner (no blinking) */}
+          <div className="relative mb-12 group">
+            <div className="w-40 h-40 border-8 border-purple-600/20 rounded-full relative">
+              <div className="absolute inset-0 border-8 border-transparent border-t-purple-500 rounded-full animate-spin"></div>
+              <div className="absolute inset-4 border-8 border-transparent border-t-cyan-400 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+              <div className="absolute inset-8 border-8 border-transparent border-t-purple-300 rounded-full animate-spin" style={{ animationDuration: '2s' }}></div>
               
-              <div className="absolute inset-8 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-full flex items-center justify-center shadow-2xl">
+              {/* Center chrome icon */}
+              <div className="absolute inset-12 bg-gradient-to-br from-purple-600 via-purple-800 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl">
                 <div className="absolute inset-1 bg-black rounded-full"></div>
-                <loadingTool.icon className="w-8 h-8 text-white relative z-10" />
+                <loadingTool.icon className="w-12 h-12 text-white relative z-10" />
+                {/* Chrome reflection */}
+                <div className="absolute inset-1 bg-gradient-to-tr from-white/30 via-white/10 to-transparent rounded-full pointer-events-none"></div>
               </div>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Loading {loadingTool.name}
-          </h2>
-          
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            {[...Array(3)].map((_, i) => (
-              <div 
-                key={i} 
-                className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" 
-                style={{ animationDelay: `${i * 0.1}s` }}
-              />
-            ))}
+          {/* Enhanced loading text (no blinking) */}
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-white bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+              Initializing {loadingTool.name}
+            </h2>
+            
+            {/* Animated dots */}
+            <div className="flex items-center justify-center space-x-3">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-3 h-3 bg-purple-500 rounded-full animate-bounce shadow-lg"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                ></div>
+              ))}
+            </div>
+            
+            <p className="text-gray-300 text-lg">
+              {isToolLoaded ? "Loading complete, finalizing..." : "Loading enterprise protocols..."}
+            </p>
           </div>
-          
-          <p className="text-gray-500">
-            {isToolLoaded ? "Finalizing..." : "Initializing..."}
-          </p>
+
+          {/* Chrome progress bar */}
+          <div className="mt-12 w-80 mx-auto">
+            <div className="h-2 bg-gray-800 rounded-full overflow-hidden relative">
+              <div className={`h-full bg-gradient-to-r from-purple-600 via-purple-400 to-cyan-400 rounded-full shadow-lg transition-all duration-1000 ${isToolLoaded ? 'w-full' : 'w-3/4'}`}></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 transform -translate-x-full animate-shimmer"></div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Fullscreen tool view
+  // Enhanced fullscreen tool view
   if (activeTool) {
     return (
       <div className="fixed inset-0 bg-black z-50 overflow-hidden">
-        <div className="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-6">
-          <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={closeTool} 
-              className="text-gray-400 hover:text-white p-2 hover:bg-gray-900 rounded-xl transition-all duration-300"
+        {/* Chrome header with glass morphism */}
+        <div className="h-16 bg-black/90 backdrop-blur-xl border-b border-gray-700/50 flex items-center justify-between px-6 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-cyan-900/20"></div>
+          
+          <div className="flex items-center space-x-4 relative z-10">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={closeTool}
+              className="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-xl transition-all duration-300 group"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span className="hidden md:inline ml-2">Back</span>
             </Button>
             
-            <div className="w-px h-8 bg-gray-700 hidden md:block"></div>
+            <div className="w-px h-8 bg-gray-600 hidden md:block"></div>
             
             <div className="flex items-center space-x-3">
-              <div className={`w-8 h-8 bg-gradient-to-br ${activeTool.gradient} rounded-lg flex items-center justify-center shadow-lg`}>
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-cyan-600 rounded-lg flex items-center justify-center shadow-lg">
                 <activeTool.icon className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-lg font-bold text-white">
                 {activeTool.name}
               </h2>
+              <span className="px-3 py-1 text-xs bg-purple-500/20 text-purple-300 rounded-full border border-purple-500/30 backdrop-blur-sm">
+                {activeTool.category}
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="h-[calc(100vh-4rem)] overflow-hidden">
-          <iframe 
-            src={activeTool.url} 
-            className="w-full h-full border-0 opacity-0" 
+        {/* Enhanced iframe container */}
+        <div className="h-[calc(100vh-4rem)] overflow-hidden relative">
+          <iframe
+            src={activeTool.url}
+            className="w-full h-full border-0 opacity-0"
             style={{ animation: 'fadeIn 0.8s ease-out 0.3s forwards' }}
-            title={activeTool.name} 
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation" 
+            title={activeTool.name}
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
           />
         </div>
       </div>
     );
   }
 
-  // Main dashboard - Powerful Trifecta Design
+  // Enhanced dashboard with chrome effects and motion graphics
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Header */}
-      <div className="border-b border-gray-900 bg-black sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-center">
+    <div className="min-h-screen bg-black text-white custom-scrollbar relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10"></div>
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-px h-px bg-purple-400/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animation: `float ${3 + Math.random() * 4}s ease-in-out ${Math.random() * 5}s infinite`
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Chrome header */}
+      <div className="border-b border-gray-800/50 bg-black/95 backdrop-blur-xl sticky top-0 z-50 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-cyan-900/20"></div>
+        <div className="container mx-auto px-6 py-4 relative z-10">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 rounded-2xl shadow-xl"></div>
+              {/* Chrome logo */}
+              <div className="w-12 h-12 relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-800 to-cyan-600 rounded-2xl shadow-xl transform group-hover:scale-110 transition-all duration-500"></div>
                 <div className="absolute inset-1 bg-black rounded-xl"></div>
-                <div className="absolute inset-1.5 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg flex items-center justify-center">
+                <div className="absolute inset-1.5 bg-gradient-to-br from-purple-600 to-cyan-600 rounded-lg flex items-center justify-center">
                   <Sword className="w-6 h-6 text-white" />
                 </div>
+                {/* Chrome reflection */}
+                <div className="absolute inset-1.5 bg-gradient-to-tr from-white/30 via-white/10 to-transparent rounded-lg pointer-events-none"></div>
               </div>
               
-              <div className="text-center">
-                <h1 className="text-3xl font-bold text-white tracking-wider">
-                  CHAINKNIGHT
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+                  ChainKnight
                 </h1>
-                <p className="text-xs text-gray-500 uppercase tracking-widest">TRIFECTA PROTOCOL</p>
+                <p className="text-sm text-gray-400">Enterprise Protocol Dashboard</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              {/* Lock toggle button */}
+              <Button
+                onClick={toggleAccessProtection}
+                className={`bg-gray-800/80 hover:bg-gray-700/80 backdrop-blur-sm border border-gray-600/50 rounded-xl p-3 transition-all duration-300 ${
+                  accessProtectionEnabled ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300'
+                }`}
+                size="sm"
+              >
+                {accessProtectionEnabled ? <Lock className="w-5 h-5" /> : <LockOpen className="w-5 h-5" />}
+              </Button>
+              
+              <div className="text-sm text-gray-400 flex items-center space-x-2">
+                <span>{tools.length} Tools</span>
+                <div className="w-2 h-2 bg-purple-500 rounded-full shadow-lg" style={{ animation: 'float 2s ease-in-out infinite' }}></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Trifecta Layout */}
-      <div className="container mx-auto px-6 py-16">
-        {/* Trifecta Title */}
-        <div className="text-center mb-20">
-          <h2 className="text-6xl font-black text-white mb-4 tracking-wider">
-            THE TRIFECTA
+      {/* Main content */}
+      <div className="container mx-auto px-6 py-12 relative z-10">
+        {/* Welcome section with chrome effects */}
+        <div className="text-center mb-16">
+          <h2 className="text-5xl font-bold text-white mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            Enterprise Protocol Suite
           </h2>
-          <div className="w-32 h-1 bg-gradient-to-r from-red-600 via-blue-600 to-purple-600 mx-auto"></div>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Access and manage your blockchain protocols, analytics, and optimization tools from a unified chrome dashboard
+          </p>
         </div>
 
-        {/* Trifecta Grid - Triangle Formation */}
-        <div className="relative max-w-4xl mx-auto">
-          {/* Top Tool */}
-          <div className="flex justify-center mb-16">
-            <Card 
-              className="w-80 h-80 bg-gray-900 border-2 border-gray-800 hover:border-red-600 transition-all duration-500 transform hover:scale-105 cursor-pointer group"
-              onClick={() => openTool(tools[0].id)}
-            >
-              <div className="h-full flex flex-col items-center justify-center p-8">
-                <div className="w-24 h-24 relative mb-8">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${tools[0].gradient} rounded-3xl shadow-2xl group-hover:scale-110 transition-all duration-500`}></div>
-                  <div className="absolute inset-2 bg-black rounded-2xl"></div>
-                  <div className={`absolute inset-3 bg-gradient-to-br ${tools[0].gradient} rounded-xl flex items-center justify-center`}>
-                    <tools[0].icon className="w-12 h-12 text-white" />
-                  </div>
-                </div>
+        {/* Enhanced tool cards with chrome effects */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {tools.map((tool) => {
+            const Icon = tool.icon;
+            const isCurrentlyLoading = loadingToolId === tool.id;
+            
+            return (
+              <Card 
+                key={tool.id}
+                className="bg-black/40 backdrop-blur-xl border border-gray-700/50 hover:border-purple-500/50 transition-all duration-700 transform hover:scale-105 hover:shadow-2xl cursor-pointer group relative overflow-hidden"
+                onClick={() => !isCurrentlyLoading && openTool(tool.id)}
+              >
+                {/* Chrome background gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-10 transition-all duration-700`}></div>
                 
-                <h3 className="text-2xl font-bold text-white mb-2 text-center">
-                  {tools[0].name}
-                </h3>
-                <span className="px-4 py-2 text-sm bg-red-900/30 text-red-300 rounded-full border border-red-800/50 uppercase tracking-wider">
-                  {tools[0].category}
-                </span>
-
-                <Button 
-                  className="w-full h-12 mt-8 rounded-xl font-bold bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white border-0 shadow-xl"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openTool(tools[0].id);
-                  }}
-                >
-                  ENGAGE
-                </Button>
-              </div>
-            </Card>
-          </div>
-
-          {/* Bottom Two Tools */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-3xl mx-auto">
-            {tools.slice(1).map((tool, index) => {
-              const Icon = tool.icon;
-              const borderHoverClass = index === 0 ? 'hover:border-blue-600' : 'hover:border-purple-600';
-              const categoryColorClass = index === 0 
-                ? 'bg-blue-900/30 text-blue-300 border-blue-800/50'
-                : 'bg-purple-900/30 text-purple-300 border-purple-800/50';
-              const buttonColorClass = index === 0
-                ? 'bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800'
-                : 'bg-gradient-to-r from-purple-700 to-purple-900 hover:from-purple-600 hover:to-purple-800';
-
-              return (
-                <Card 
-                  key={tool.id}
-                  className={`w-80 h-80 bg-gray-900 border-2 border-gray-800 transition-all duration-500 transform hover:scale-105 cursor-pointer group mx-auto ${borderHoverClass}`}
-                  onClick={() => openTool(tool.id)}
-                >
-                  <div className="h-full flex flex-col items-center justify-center p-8">
-                    <div className="w-24 h-24 relative mb-8">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} rounded-3xl shadow-2xl group-hover:scale-110 transition-all duration-500`}></div>
-                      <div className="absolute inset-2 bg-black rounded-2xl"></div>
-                      <div className={`absolute inset-3 bg-gradient-to-br ${tool.gradient} rounded-xl flex items-center justify-center`}>
-                        <Icon className="w-12 h-12 text-white" />
-                      </div>
-                    </div>
-                    
-                    <h3 className="text-2xl font-bold text-white mb-2 text-center">
-                      {tool.name}
-                    </h3>
-                    <span className={`px-4 py-2 text-sm rounded-full border uppercase tracking-wider ${categoryColorClass}`}>
+                {/* Animated border */}
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-600 via-cyan-600 to-purple-600 opacity-0 group-hover:opacity-30 blur-sm transition-all duration-700" style={{ animation: 'float 4s ease-in-out infinite' }}></div>
+                
+                <div className="p-8 relative z-10">
+                  {/* Category badge with chrome effect */}
+                  <div className="mb-6">
+                    <span className="px-4 py-2 text-xs font-bold bg-black/60 backdrop-blur-sm text-purple-300 rounded-full border border-purple-500/30 group-hover:bg-purple-500/20 transition-all duration-300 shadow-lg">
                       {tool.category}
                     </span>
+                  </div>
 
-                    <Button 
-                      className={`w-full h-12 mt-8 rounded-xl font-bold text-white border-0 shadow-xl ${buttonColorClass}`}
+                  {/* Chrome icon */}
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="w-20 h-20 relative group/icon">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} rounded-3xl shadow-2xl transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}></div>
+                      <div className="absolute inset-1 bg-black rounded-2xl"></div>
+                      <div className={`absolute inset-2 bg-gradient-to-br ${tool.gradient} rounded-xl flex items-center justify-center shadow-inner`}>
+                        {isCurrentlyLoading ? (
+                          <Loader className="w-8 h-8 text-white animate-spin" />
+                        ) : (
+                          <Icon className="w-8 h-8 text-white drop-shadow-lg" />
+                        )}
+                      </div>
+                      {/* Chrome reflection */}
+                      <div className="absolute inset-2 bg-gradient-to-tr from-white/30 via-white/10 to-transparent rounded-xl pointer-events-none"></div>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-200 group-hover:to-cyan-200 group-hover:bg-clip-text transition-all duration-300">
+                        {tool.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-gray-400 mb-8 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                    {tool.description}
+                  </p>
+
+                  {/* Chrome action button */}
+                  <div className="flex justify-center">
+                    <Button
+                      className="w-full h-12 rounded-xl font-bold relative overflow-hidden group/btn transition-all duration-300 shadow-xl"
                       onClick={(e) => {
                         e.stopPropagation();
-                        openTool(tool.id);
+                        if (!isCurrentlyLoading) {
+                          openTool(tool.id);
+                        }
                       }}
+                      disabled={isCurrentlyLoading}
                     >
-                      ENGAGE
+                      <div className={`absolute inset-0 bg-gradient-to-r ${tool.gradient} transition-all duration-300 group-hover/btn:scale-110`}></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
+                      <span className="relative z-10">
+                        {isCurrentlyLoading ? 'LOADING...' : 'OPEN'}
+                      </span>
                     </Button>
                   </div>
-                </Card>
-              );
-            })}
-          </div>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="border-t border-gray-900 bg-black mt-16">
-        <div className="container mx-auto px-6 py-8">
-          <div className="text-center">
-            <p className="text-gray-600 text-sm uppercase tracking-widest">
-              ChainKnight Enterprise Protocol Suite
-            </p>
+      {/* Enhanced footer with chrome effects */}
+      <div className="border-t border-gray-800/50 bg-black/60 backdrop-blur-xl mt-16 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-transparent to-cyan-900/10"></div>
+        <div className="container mx-auto px-6 py-8 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="text-gray-400 text-center md:text-left">
+              <p className="font-bold text-lg bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text text-transparent">ChainKnight Enterprise</p>
+              <p className="text-sm">Unified Protocol Management Dashboard</p>
+            </div>
+            <div className="flex items-center space-x-6 text-sm text-gray-500">
+              <span className="hover:text-purple-400 transition-colors cursor-pointer">Wayne Protocol</span>
+              <div className="w-1 h-1 bg-purple-500 rounded-full" style={{ animation: 'float 2s ease-in-out infinite' }}></div>
+              <span className="hover:text-cyan-400 transition-colors cursor-pointer">Alpha Mind</span>
+              <div className="w-1 h-1 bg-cyan-500 rounded-full" style={{ animation: 'float 2.5s ease-in-out infinite' }}></div>
+              <span className="hover:text-emerald-400 transition-colors cursor-pointer">Euler Flow</span>
+            </div>
           </div>
         </div>
       </div>
