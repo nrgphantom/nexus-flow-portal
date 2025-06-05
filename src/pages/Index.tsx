@@ -139,9 +139,33 @@ const Index = () => {
     );
   }
 
-  // Main dashboard - Triangle Formation with connecting lines
+  // Main dashboard - Triangle Formation with typography background
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen bg-black text-white overflow-hidden relative">
+      {/* Cool Typography Background Effect */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+        <div className="absolute top-10 left-10 text-9xl font-bold text-gray-900/10 transform -rotate-12 animate-pulse">
+          CHAIN
+        </div>
+        <div className="absolute top-1/4 right-20 text-7xl font-bold text-gray-800/10 transform rotate-12">
+          KNIGHT
+        </div>
+        <div className="absolute bottom-1/4 left-1/4 text-6xl font-bold text-gray-900/10 transform -rotate-6 animate-float">
+          PROTOCOL
+        </div>
+        <div className="absolute bottom-20 right-1/4 text-8xl font-bold text-gray-800/10 transform rotate-6">
+          FLOW
+        </div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl font-bold text-purple-900/20 animate-pulse">
+          TRINITY
+        </div>
+        
+        {/* Floating geometric shapes */}
+        <div className="absolute top-1/3 left-1/5 w-32 h-32 border border-purple-900/20 rounded-full animate-spin" style={{ animationDuration: '20s' }}></div>
+        <div className="absolute bottom-1/3 right-1/5 w-24 h-24 border border-red-900/20 transform rotate-45 animate-pulse"></div>
+        <div className="absolute top-2/3 left-2/3 w-16 h-16 bg-gradient-to-r from-blue-900/20 to-green-900/20 rounded-lg animate-float"></div>
+      </div>
+
       {/* Header with Logo */}
       <div className="border-b border-gray-800 bg-black relative z-10">
         <div className="container mx-auto px-6 py-6">
@@ -161,46 +185,20 @@ const Index = () => {
 
       {/* Main Triangle Layout */}
       <div className="container mx-auto px-6 py-8 md:py-16 flex items-center justify-center min-h-[calc(100vh-200px)] relative z-10">
-        <div className="relative w-full max-w-2xl">
-          {/* SVG for connecting lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
-            {/* Triangle connecting lines */}
-            <line 
-              x1="50%" y1="10%" 
-              x2="15%" y2="85%" 
-              stroke="rgba(147, 51, 234, 0.3)" 
-              strokeWidth="2" 
-              strokeDasharray="5,5"
-            />
-            <line 
-              x1="50%" y1="10%" 
-              x2="85%" y2="85%" 
-              stroke="rgba(147, 51, 234, 0.3)" 
-              strokeWidth="2" 
-              strokeDasharray="5,5"
-            />
-            <line 
-              x1="15%" y1="85%" 
-              x2="85%" y2="85%" 
-              stroke="rgba(147, 51, 234, 0.3)" 
-              strokeWidth="2" 
-              strokeDasharray="5,5"
-            />
-          </svg>
-
-          {/* Triangle Formation Container */}
-          <div className="relative w-full aspect-square max-w-[500px] mx-auto" style={{ zIndex: 2 }}>
+        <div className="relative w-full max-w-lg">
+          {/* Triangle Formation Container - Tighter spacing */}
+          <div className="relative w-full aspect-square max-w-[400px] mx-auto">
             
             {/* Top Tool - Wayne Protocol */}
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
               <div 
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-red-600 via-red-700 to-red-900 flex items-center justify-center cursor-pointer transform hover:scale-110 transition-all duration-300 border-4 border-gray-800 hover:border-red-500/50 shadow-2xl hover:shadow-red-500/30"
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-red-600 via-red-700 to-red-900 flex items-center justify-center cursor-pointer transform hover:scale-110 transition-all duration-300 border-4 border-gray-800 hover:border-red-500/50 shadow-2xl hover:shadow-red-500/30"
                 onClick={() => !loadingToolId && openTool("wayne")}
               >
                 {loadingToolId === "wayne" ? (
-                  <Loader className="w-8 h-8 md:w-12 md:h-12 text-white animate-spin" />
+                  <Loader className="w-10 h-10 md:w-14 md:h-14 text-white animate-spin" />
                 ) : (
-                  <Sword className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                  <Sword className="w-10 h-10 md:w-14 md:h-14 text-white" />
                 )}
               </div>
               <div className="text-center mt-4">
@@ -209,15 +207,15 @@ const Index = () => {
             </div>
 
             {/* Bottom Left Tool - Alpha Mind */}
-            <div className="absolute bottom-0 left-0 transform translate-y-1/2">
+            <div className="absolute bottom-0 left-8">
               <div 
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 flex items-center justify-center cursor-pointer transform hover:scale-110 transition-all duration-300 border-4 border-gray-800 hover:border-blue-500/50 shadow-2xl hover:shadow-blue-500/30"
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 flex items-center justify-center cursor-pointer transform hover:scale-110 transition-all duration-300 border-4 border-gray-800 hover:border-blue-500/50 shadow-2xl hover:shadow-blue-500/30"
                 onClick={() => !loadingToolId && openTool("alpha")}
               >
                 {loadingToolId === "alpha" ? (
-                  <Loader className="w-8 h-8 md:w-12 md:h-12 text-white animate-spin" />
+                  <Loader className="w-10 h-10 md:w-14 md:h-14 text-white animate-spin" />
                 ) : (
-                  <Brain className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                  <Brain className="w-10 h-10 md:w-14 md:h-14 text-white" />
                 )}
               </div>
               <div className="text-center mt-4">
@@ -226,15 +224,15 @@ const Index = () => {
             </div>
 
             {/* Bottom Right Tool - Euler Flow */}
-            <div className="absolute bottom-0 right-0 transform translate-y-1/2">
+            <div className="absolute bottom-0 right-8">
               <div 
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-green-600 via-green-700 to-green-900 flex items-center justify-center cursor-pointer transform hover:scale-110 transition-all duration-300 border-4 border-gray-800 hover:border-green-500/50 shadow-2xl hover:shadow-green-500/30"
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-green-600 via-green-700 to-green-900 flex items-center justify-center cursor-pointer transform hover:scale-110 transition-all duration-300 border-4 border-gray-800 hover:border-green-500/50 shadow-2xl hover:shadow-green-500/30"
                 onClick={() => !loadingToolId && openTool("euler")}
               >
                 {loadingToolId === "euler" ? (
-                  <Loader className="w-8 h-8 md:w-12 md:h-12 text-white animate-spin" />
+                  <Loader className="w-10 h-10 md:w-14 md:h-14 text-white animate-spin" />
                 ) : (
-                  <Zap className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                  <Zap className="w-10 h-10 md:w-14 md:h-14 text-white" />
                 )}
               </div>
               <div className="text-center mt-4">
