@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sword, Brain, Zap, ArrowLeft, Loader } from "lucide-react";
-
 const Index = () => {
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingToolId, setLoadingToolId] = useState<string | null>(null);
   const [isToolLoaded, setIsToolLoaded] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-
   const tools = [{
     id: "wayne",
     name: "Wayne Protocol",
@@ -34,7 +32,6 @@ const Index = () => {
     description: "Streamlined Operations",
     color: "rgb(34, 197, 94)"
   }];
-
   useEffect(() => {
     if (isLoading) {
       setLoadingProgress(0);
@@ -47,20 +44,17 @@ const Index = () => {
       return () => clearInterval(interval);
     }
   }, [isLoading]);
-
   const openTool = (toolId: string) => {
     setLoadingToolId(toolId);
     setIsLoading(true);
     setIsToolLoaded(false);
   };
-
   const closeTool = () => {
     setActiveToolId(null);
     setIsLoading(false);
     setIsToolLoaded(false);
     setLoadingToolId(null);
   };
-
   const handleIframeLoad = () => {
     setIsToolLoaded(true);
     setLoadingProgress(100);
@@ -70,32 +64,19 @@ const Index = () => {
       setLoadingToolId(null);
     }, 300);
   };
-
   const activeTool = tools.find(tool => tool.id === activeToolId);
   const loadingTool = tools.find(tool => tool.id === loadingToolId);
 
   // Loading screen
   if (isLoading && loadingTool) {
-    return (
-      <div className="fixed inset-0 bg-black z-50 flex items-center justify-center overflow-hidden">
-        {!isToolLoaded && (
-          <iframe 
-            src={loadingTool.url} 
-            className="hidden" 
-            onLoad={handleIframeLoad} 
-            title={`Loading ${loadingTool.name}`} 
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation" 
-          />
-        )}
+    return <div className="fixed inset-0 bg-black z-50 flex items-center justify-center overflow-hidden">
+        {!isToolLoaded && <iframe src={loadingTool.url} className="hidden" onLoad={handleIframeLoad} title={`Loading ${loadingTool.name}`} sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation" />}
 
         <div className="relative w-full max-w-sm mx-auto px-4">
           {/* Subtle Background Glow */}
-          <div 
-            className="absolute inset-0 opacity-20 blur-3xl rounded-full"
-            style={{
-              background: `radial-gradient(circle at center, ${loadingTool.color}, transparent 60%)`,
-            }}
-          />
+          <div className="absolute inset-0 opacity-20 blur-3xl rounded-full" style={{
+          background: `radial-gradient(circle at center, ${loadingTool.color}, transparent 60%)`
+        }} />
 
           {/* Main Loading Container */}
           <div className="relative text-center">
@@ -106,17 +87,7 @@ const Index = () => {
               
               {/* Progress Circle */}
               <svg className="absolute inset-0 w-full h-full -rotate-90">
-                <circle
-                  cx="64"
-                  cy="64"
-                  r="60"
-                  fill="none"
-                  stroke={loadingTool.color}
-                  strokeWidth="4"
-                  strokeDasharray={`${loadingProgress * 3.77} 377`}
-                  strokeLinecap="round"
-                  className="transition-all duration-300 ease-out"
-                />
+                <circle cx="64" cy="64" r="60" fill="none" stroke={loadingTool.color} strokeWidth="4" strokeDasharray={`${loadingProgress * 3.77} 377`} strokeLinecap="round" className="transition-all duration-300 ease-out" />
               </svg>
 
               {/* Icon Container */}
@@ -136,21 +107,14 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
 
   // Tool view
   if (activeTool) {
-    return (
-      <div className="fixed inset-0 bg-black z-50 overflow-hidden">
+    return <div className="fixed inset-0 bg-black z-50 overflow-hidden">
         <div className="h-16 bg-black/50 backdrop-blur-xl border-b border-white/10 flex items-center px-6 transition-all duration-300">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={closeTool} 
-            className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300"
-          >
+          <Button variant="ghost" size="sm" onClick={closeTool} className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300">
             <ArrowLeft className="w-5 h-5 mr-2" />
             <span className="hidden sm:inline">Back</span>
           </Button>
@@ -166,29 +130,18 @@ const Index = () => {
         </div>
 
         <div className="h-[calc(100vh-4rem)]">
-          <iframe 
-            src={activeTool.url} 
-            className="w-full h-full border-0" 
-            title={activeTool.name} 
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation" 
-          />
+          <iframe src={activeTool.url} className="w-full h-full border-0" title={activeTool.name} sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation" />
         </div>
-      </div>
-    );
+      </div>;
   }
 
   // Dashboard
-  return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+  return <div className="min-h-screen bg-black text-white flex flex-col">
       {/* Header */}
       <header className="border-b border-white/10 bg-black/50 backdrop-blur-xl sticky top-0 z-10">
         <div className="container mx-auto px-4 h-20 flex items-center">
           <div className="flex items-center space-x-4 mx-auto">
-            <img 
-              src="/lovable-uploads/73348684-6f74-4be7-818b-acd505dd5375.png" 
-              alt="ChainKnight"
-              className="w-10 h-10 animate-float"
-            />
+            <img src="/lovable-uploads/73348684-6f74-4be7-818b-acd505dd5375.png" alt="ChainKnight" className="w-10 h-10 animate-float" />
             <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
               ChainKnight
             </h1>
@@ -211,36 +164,22 @@ const Index = () => {
 
           {/* Tools Grid */}
           <div className="grid gap-6 md:grid-cols-3 fade-in">
-            {tools.map(tool => (
-              <button
-                key={tool.id}
-                onClick={() => !loadingToolId && openTool(tool.id)}
-                className="group relative overflow-hidden bg-white/5 backdrop-blur rounded-xl transition-all duration-300 hover:bg-white/10 border border-white/10 hover:border-white/20 p-1"
-              >
+            {tools.map(tool => <button key={tool.id} onClick={() => !loadingToolId && openTool(tool.id)} className="group relative overflow-hidden bg-white/5 backdrop-blur rounded-xl transition-all duration-300 hover:bg-white/10 border border-white/10 hover:border-white/20 p-1">
                 {/* Gradient Background Effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-                  style={{
-                    background: `radial-gradient(circle at center, ${tool.color}, transparent 70%)`
-                  }}
-                />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300" style={{
+              background: `radial-gradient(circle at center, ${tool.color}, transparent 70%)`
+            }} />
 
                 <div className="relative p-6 h-full">
                   <div className={`w-16 h-16 mb-6 bg-gradient-to-br ${tool.gradient} rounded-xl flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
-                    {loadingToolId === tool.id ? (
-                      <Loader className="w-8 h-8 text-white animate-spin" />
-                    ) : (
-                      <tool.icon className="w-8 h-8 text-white" />
-                    )}
+                    {loadingToolId === tool.id ? <Loader className="w-8 h-8 text-white animate-spin" /> : <tool.icon className="w-8 h-8 text-white" />}
                   </div>
                   <h3 className="text-xl font-bold mb-3 transition-colors duration-300 group-hover:text-white">
                     {tool.name}
                   </h3>
-                  <p className="text-white/60 group-hover:text-white/70 transition-colors duration-300">
-                    {tool.description}
-                  </p>
+                  
                 </div>
-              </button>
-            ))}
+              </button>)}
           </div>
         </div>
       </main>
@@ -253,8 +192,6 @@ const Index = () => {
           </p>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
