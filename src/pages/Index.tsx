@@ -41,9 +41,9 @@ const Index = () => {
       const interval = setInterval(() => {
         setLoadingProgress(prev => {
           if (prev >= 90) return prev;
-          return prev + Math.random() * 15;
+          return prev + Math.random() * 10;
         });
-      }, 200);
+      }, 150);
       return () => clearInterval(interval);
     }
   }, [isLoading]);
@@ -68,7 +68,7 @@ const Index = () => {
       setIsLoading(false);
       setActiveToolId(loadingToolId);
       setLoadingToolId(null);
-    }, 500);
+    }, 300);
   };
 
   const activeTool = tools.find(tool => tool.id === activeToolId);
@@ -89,49 +89,45 @@ const Index = () => {
         )}
 
         <div className="relative w-full max-w-sm mx-auto px-4">
-          {/* Animated Background */}
+          {/* Subtle Background Glow */}
           <div 
-            className="absolute inset-0 opacity-30 blur-3xl"
+            className="absolute inset-0 opacity-20 blur-3xl rounded-full"
             style={{
-              background: `radial-gradient(circle at center, ${loadingTool.color}, transparent 70%)`,
-              animation: "pulse 2s infinite"
+              background: `radial-gradient(circle at center, ${loadingTool.color}, transparent 60%)`,
             }}
           />
 
-          {/* Loading Animation */}
-          <div className="relative">
-            {/* Outer Ring */}
-            <div className="w-48 h-48 mx-auto border-8 border-white/10 rounded-full relative">
-              {/* Progress Ring */}
-              <svg className="absolute inset-0 w-full h-full rotate-90">
+          {/* Main Loading Container */}
+          <div className="relative text-center">
+            {/* Progress Circle */}
+            <div className="w-32 h-32 mx-auto mb-8 relative">
+              {/* Background Circle */}
+              <div className="absolute inset-0 border-4 border-white/10 rounded-full"></div>
+              
+              {/* Progress Circle */}
+              <svg className="absolute inset-0 w-full h-full -rotate-90">
                 <circle
-                  className="transition-all duration-300 ease-in-out"
-                  style={{
-                    stroke: loadingTool.color,
-                    strokeWidth: "8px",
-                    fill: "none",
-                    strokeDasharray: `${loadingProgress * 5.65}, 565.48`, // 565.48 is circumference (180 * π)
-                  }}
-                  cx="96"
-                  cy="96"
-                  r="90"
+                  cx="64"
+                  cy="64"
+                  r="60"
+                  fill="none"
+                  stroke={loadingTool.color}
+                  strokeWidth="4"
+                  strokeDasharray={`${loadingProgress * 3.77} 377`}
+                  strokeLinecap="round"
+                  className="transition-all duration-300 ease-out"
                 />
               </svg>
 
-              {/* Spinning Middle Ring */}
-              <div className="absolute inset-4 border-4 border-white/20 rounded-full animate-spin" 
-                style={{ animationDuration: "3s" }} 
-              />
-
               {/* Icon Container */}
-              <div className={`absolute inset-8 bg-gradient-to-br ${loadingTool.gradient} rounded-full flex items-center justify-center transform transition-transform duration-500 animate-float`}>
-                <loadingTool.icon className="w-12 h-12 text-white animate-pulse" />
+              <div className={`absolute inset-4 bg-gradient-to-br ${loadingTool.gradient} rounded-full flex items-center justify-center shadow-2xl`}>
+                <loadingTool.icon className="w-8 h-8 text-white" />
               </div>
             </div>
 
             {/* Loading Text */}
-            <div className="text-center mt-8 relative">
-              <h2 className="text-2xl font-bold mb-2 animate-pulse">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-white">
                 {loadingTool.name}
               </h2>
               <div className="text-white/60 text-sm">
