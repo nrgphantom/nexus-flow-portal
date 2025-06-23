@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Sword, Brain, Zap, ArrowLeft, Loader } from "lucide-react";
+import { Sword, Brain, Zap, ArrowLeft, Loader, ExternalLink } from "lucide-react";
+
 const Index = () => {
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingToolId, setLoadingToolId] = useState<string | null>(null);
   const [isToolLoaded, setIsToolLoaded] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  
   const tools = [{
     id: "wayne",
     name: "Wayne Protocol",
@@ -32,6 +34,7 @@ const Index = () => {
     description: "Streamlined Operations",
     color: "rgb(34, 197, 94)"
   }];
+  
   useEffect(() => {
     if (isLoading) {
       setLoadingProgress(0);
@@ -44,17 +47,20 @@ const Index = () => {
       return () => clearInterval(interval);
     }
   }, [isLoading]);
+  
   const openTool = (toolId: string) => {
     setLoadingToolId(toolId);
     setIsLoading(true);
     setIsToolLoaded(false);
   };
+  
   const closeTool = () => {
     setActiveToolId(null);
     setIsLoading(false);
     setIsToolLoaded(false);
     setLoadingToolId(null);
   };
+  
   const handleIframeLoad = () => {
     setIsToolLoaded(true);
     setLoadingProgress(100);
@@ -64,6 +70,7 @@ const Index = () => {
       setLoadingToolId(null);
     }, 300);
   };
+  
   const activeTool = tools.find(tool => tool.id === activeToolId);
   const loadingTool = tools.find(tool => tool.id === loadingToolId);
 
@@ -139,13 +146,32 @@ const Index = () => {
   return <div className="min-h-screen bg-black text-white flex flex-col">
       {/* Header */}
       <header className="border-b border-white/10 bg-black/50 backdrop-blur-xl sticky top-0 z-10">
-        <div className="container mx-auto px-4 h-20 flex items-center">
-          <div className="flex items-center space-x-4 mx-auto">
+        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
             <img src="/lovable-uploads/73348684-6f74-4be7-818b-acd505dd5375.png" alt="ChainKnight" className="w-10 h-10 animate-float" />
             <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
               ChainKnight
             </h1>
           </div>
+          
+          {/* Built with Bolt.new Badge */}
+          <a 
+            href="https://bolt.new" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="group flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 rounded-full text-sm text-white/80 hover:text-white hover:border-purple-400/50 transition-all duration-300 hover:scale-105"
+          >
+            <span className="text-xs font-medium">Built with</span>
+            <div className="flex items-center space-x-1">
+              <div className="w-4 h-4 bg-gradient-to-r from-purple-400 to-blue-400 rounded-sm flex items-center justify-center">
+                <Zap className="w-2.5 h-2.5 text-white" />
+              </div>
+              <span className="font-semibold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                Bolt.new
+              </span>
+            </div>
+            <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+          </a>
         </div>
       </header>
 
@@ -194,4 +220,5 @@ const Index = () => {
       </footer>
     </div>;
 };
+
 export default Index;
